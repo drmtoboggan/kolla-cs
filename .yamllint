@@ -1,0 +1,30 @@
+# .yamllint
+extends: default
+
+rules:
+  # Allow long lines in specific cases
+  line-length:
+    max: 120
+    level: warning
+
+  # Allow truthy values for Ansible
+  truthy:
+    allowed-values: ['true', 'false', 'yes', 'no']
+    check-keys: false
+
+  # Relax indentation rules for Ansible
+  indentation:
+    spaces: 2
+    indent-sequences: true
+    check-multi-line-strings: false
+
+  # Allow comments with less spacing
+  comments:
+    min-spaces-from-content: 1
+
+ignore: |
+  .github/
+  venv/
+  .venv/
+  .tox/
+  .molecule/

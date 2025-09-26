@@ -1,0 +1,39 @@
+# collections/requirements.yml
+---
+collections:
+  # OpenStack collection
+  - name: openstack.cloud
+    version: ">=2.1.0"
+    source: https://galaxy.ansible.com
+
+  # Community general collection (for various modules)
+  - name: community.general
+    version: ">=8.0.0"
+
+  # Community crypto collection (for certificates)
+  - name: community.crypto
+    version: ">=2.15.0"
+
+  # Community Docker collection
+  - name: community.docker
+    version: ">=3.4.0"
+
+  # Ansible POSIX collection
+  - name: ansible.posix
+    version: ">=1.5.0"
+
+  # Kubernetes collection (if using container orchestration)
+  - name: kubernetes.core
+    version: ">=2.4.0"
+
+  # Grafana collection for monitoring
+  - name: grafana.grafana
+    version: ">=2.2.0"
+
+  # Prometheus collection
+  - name: prometheus.prometheus
+    version: ">=0.13.0"
+
+  # HashiCorp Vault collection
+  - name: community.hashi_vault
+    version: ">=6.0.0"

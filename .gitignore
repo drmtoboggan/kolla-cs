@@ -1,0 +1,52 @@
+# .gitignore
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Ansible
+*.retry
+.vault_pass
+/tmp/
+/facts_cache/
+.molecule/
+
+# Logs
+*.log
+logs/
+
+# Virtual environments
+venv/
+env/
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Kolla-Ansible specific
+/config/kolla/passwords.yml
+/config/kolla/certificates/
+/credentials/
+/backup/
+
+# Secrets (encrypted files should still be tracked)
+**/vault.yml
+!**/vault.yml.example
+
+# Terraform (if used)
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# Build artifacts
+dist/
+build/
