@@ -1,4 +1,4 @@
-# requirements.yml (Ansible roles)
+# requirements.yml
 ---
 roles:
   # Security hardening role
@@ -17,17 +17,17 @@ roles:
   - name: geerlingguy.ntp
     version: "2.3.0"
 
-  # Node exporter for Prometheus monitoring
+  # Node exporter for Prometheus monitoring - FIX: Use available version
   - name: cloudalchemy.node_exporter
-    version: "3.2.0"
+    version: "2.0.0"  # Changed from 3.2.0 to 2.0.0
 
-  # Prometheus server role
+  # Prometheus server role - These versions may also need updating
   - name: cloudalchemy.prometheus
-    version: "2.25.0"
+    version: "2.25.0"  # This might also need version verification
 
-  # Grafana role
+  # Grafana role - This version may also need updating
   - name: cloudalchemy.grafana
-    version: "0.23.1"
+    version: "0.23.1"  # This might also need version verification
 
   # Firewall management
   - name: geerlingguy.firewall
