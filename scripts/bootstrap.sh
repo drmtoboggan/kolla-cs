@@ -29,7 +29,7 @@ pip install ansible kolla-ansible
 
 # Install Ansible collections and roles
 echo "Installing Ansible dependencies..."
-ansible-galaxy install -r requirements.yml
+ansible-galaxy install -r requirements.yml --ignore-errors
 ansible-galaxy collection install -r collections/requirements.yml
 
 # Generate passwords
