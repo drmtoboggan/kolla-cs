@@ -1,0 +1,11 @@
+---
+$ANSIBLE_VAULT;1.1;AES256;dev
+66636336663064663...
+
+# Encrypted content includes:
+# - Database passwords  
+# - Keystone admin password
+# - RabbitMQ password
+# - Memcached secret key
+# - Ceph client keys
+# - Certificate private keys
