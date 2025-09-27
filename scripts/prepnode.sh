@@ -19,4 +19,11 @@ sudo pvresize /dev/sda3
 sudo lvextend -l +100%FREE /dev/mapper/ubuntu--vg-ubuntu--lv
 sudo resize2fs /dev/mapper/ubuntu--vg-ubuntu--lv
 
+sudo apt install chrony -y
+sudo systemctl enable chrony
+sudo systemctl start chrony
+sudo systemctl status chrony
+
+# Commented out 127.0.0.1 and 127.1.1.1 lines to get prechecks to work
+
 sudo reboot now 
