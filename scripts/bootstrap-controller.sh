@@ -18,10 +18,15 @@ elif command -v apt >/dev/null; then
     sudo apt install -y python3-pip python3-venv git
 fi
 
+# Creating vdir
+sudo mkdir /kolla
+sudo chown $USER:$USER /kolla
+
 # Create Python virtual environment
 echo "Setting up Python virtual environment..."
 python3 -m venv venv
 source venv/bin/activate
+
 
 # Install Python dependencies
 pip install --upgrade pip

@@ -1,52 +1,101 @@
-# config/kolla/globals.yml.example
+# Kolla-Ansible 2025.1 Configuration
+# Updated for compatibility with 2025.1 release
 ---
-# Kolla-Ansible 2024.2 Configuration Template
+
+#######################
 # Basic Configuration
-kolla_base_distro: "rocky"
-openstack_release: "2024.2"
-kolla_tag: "2024.2"
+#######################
+kolla_base_distro: "debian"
+openstack_release: "2025.1"
+kolla_tag: "2025.1"
 kolla_container_engine: "docker"
 
+#######################
 # Network Configuration
+#######################
 network_interface: "ens33"
 neutron_external_interface: "ens35"
 kolla_internal_vip_address: "10.10.27.250"
 kolla_external_vip_address: "10.10.28.250"
 
-# Enable TLS
+# TLS Configuration
 kolla_enable_tls_external: "no"
 kolla_enable_tls_internal: "no"
 kolla_external_fqdn: "openstack.region.com"
 
+#######################
+# Critical 2025.1 Fixes
+#######################
+# Fix for Keystone container startup failure (uWSGI compatibility)
+keystone_wsgi_provider: "apache"
+cinder_wsgi_provider: "uwsgi"
+nova_wsgi_provider: "apache"
+placement_wsgi_provider: "apache"
+
+# RabbitMQ 4.0 migration requirements (CRITICAL)
+om_enable_queue_manager: true
+om_enable_rabbitmq_quorum_queues: true
+om_enable_rabbitmq_transient_quorum_queue: true
+om_enable_rabbitmq_stream_fanout: true
+
+# Database load balancing (keep HAProxy instead of new ProxySQL default)
+enable_proxysql: "no"
+
+# Updated certificate server
+letsencrypt_external_cert_server: "https://acme-v02.api.letsencrypt.org/directory"
+
+#######################
 # Core OpenStack Services
+#######################
 enable_keystone: "yes"
 enable_glance: "yes"
 enable_nova: "yes"
 enable_neutron: "yes"
-enable_horizon: "yes"
+enable_horizon: "no"
 enable_cinder: "yes"
+enable_placement: "yes"
 
+#######################
+# Database and Messaging
+#######################
+enable_mariadb: "yes"
+enable_rabbitmq: "yes"
+enable_memcached: "yes"
+enable_redis: "yes"
+
+#######################
 # Advanced Services
+#######################
 enable_octavia: "yes"
 enable_ironic: "yes"
 enable_masakari: "yes"
 enable_watcher: "yes"
 
+#######################
 # Ironic Configuration
+#######################
+# Updated defaults for 2025.1
 enable_ironic_inspector: "yes"
 enable_ironic_pxe_uefi: "yes"
+enable_ironic_neutron_agent: "yes"
+
 ironic_dnsmasq_interface: "{{ network_interface }}"
 ironic_dnsmasq_dhcp_ranges:
-  - network: "10.10.27.0/24"
-    start: "10.10.27.50"
-    end: "10.10.27.100"
-    gateway: "10.10.27.1"
+  - range: "10.10.27.50,10.10.27.100"
+    routers: "10.10.27.1"
+    netmask: "255.255.255.0"
+    domain: "region.com"
 ironic_dnsmasq_default_gateway: "10.10.27.1"
-ironic_dnsmasq_dns_servers: "8.8.8.8,8.8.4.4"
+ironic_dnsmasq_dns_servers: "192.168.1.12"
 ironic_cleaning_network: "public1"
 ironic_provisioning_network: "public1"
 
+# Ironic version pinning for compatibility
+ironic_pin_release_version: "2024.2"
+
+#######################
 # Monitoring and Logging
+#######################
 enable_prometheus: "yes"
 enable_grafana: "yes"
 enable_elasticsearch: "yes"
@@ -55,7 +104,7 @@ enable_kibana: "yes"
 # Prometheus Configuration
 prometheus_haproxy_user: "admin"
 prometheus_haproxy_password: "{{ keystone_admin_password }}"
-prometheus_alertmanager_user: "admin" 
+prometheus_alertmanager_user: "admin"
 prometheus_alertmanager_password: "{{ keystone_admin_password }}"
 
 # Enable Prometheus exporters
@@ -67,17 +116,9 @@ enable_prometheus_elasticsearch_exporter: "yes"
 enable_prometheus_blackbox_exporter: "yes"
 enable_prometheus_libvirt_exporter: "yes"
 
-# Database and Messaging
-enable_mariadb: "yes"
-enable_proxysql: "yes"
-enable_rabbitmq: "yes"
-enable_memcached: "yes"
-
-# Kolla-Ansible 2024.2 Features
-om_enable_rabbitmq_transient_quorum_queue: true
-om_enable_rabbitmq_stream_fanout: true
-
+#######################
 # External Ceph Configuration
+#######################
 enable_ceph: "no"
 glance_backend_ceph: "yes"
 cinder_backend_ceph: "yes"
@@ -96,23 +137,89 @@ ceph_glance_keyring: "ceph.client.glance.keyring"
 ceph_gnocchi_user: "gnocchi"
 ceph_gnocchi_keyring: "ceph.client.gnocchi.keyring"
 
-# Ceph RBD pool names (adjust to match your Ceph cluster)
+# Ceph RBD pool names
 ceph_nova_pool_name: "vms"
 ceph_cinder_pool_name: "volumes"
 ceph_cinder_backup_pool_name: "backups"
 ceph_glance_pool_name: "images"
 ceph_gnocchi_pool_name: "gnocchi"
 
-# RBD secret UUIDs (generate with uuidgen)
+# RBD secret UUIDs
 cinder_rbd_secret_uuid: "{{ nova_rbd_secret_uuid }}"
 nova_rbd_secret_uuid: "4049ba20-c583-4c49-a8c4-62397d477f96"
 rbd_secret_uuid: "{{ nova_rbd_secret_uuid }}"
 
+#######################
 # OVN Networking
+#######################
 neutron_plugin_agent: "ovn"
 neutron_ovn_distributed_fip: "yes"
 neutron_ovn_dhcp_agent: "yes"
 
-# Security
+# Enable OpenVSwitch
+enable_openvswitch: "yes"
+
+# Disable OVN relay to avoid dependency issues
+enable_ovn_sb_db_relay: "no"
+
+ovn_controller_ovn_remote: "tcp:{{ kolla_internal_vip_address }}:6642"
+ovn_controller_ovn_encap_type: "geneve"
+ovn_controller_ovn_encap_ip: "{{ ansible_host }}"
+
+#######################
+# Security Configuration
+#######################
 keystone_token_provider: "fernet"
 keystone_fernet_token_expiry: 3600
+
+#######################
+# Performance Optimization
+#######################
+# Optimizations for complex multi-service deployment
+openstack_logging_debug: "False"
+enable_central_logging: "yes"
+
+# Resource management for complex deployment
+nova_compute_ironic_custom_host: "ironic-compute"
+
+#######################
+# Octavia Configuration
+#######################
+# Load balancer as a service
+octavia_amp_network:
+  name: lb-mgmt-net
+  provider_network_type: vlan
+  provider_physical_network: "physnet1"
+  provider_segmentation_id: 29
+  cidr: "10.1.2.0/24"
+  allocation_pool_start: "10.1.2.100"
+  allocation_pool_end: "10.1.2.200"
+  gateway_ip: "10.1.2.1"
+  enable_dhcp: true
+  subnet:
+    name: lb-mgmt-subnet
+    cidr: "10.1.2.0/24"
+    allocation_pool_start: "10.1.2.100"
+    allocation_pool_end: "10.1.2.200"
+    gateway_ip: "10.1.2.1"
+    enable_dhcp: true
+
+#######################
+# Masakari Configuration
+#######################
+# Instance High Availability
+masakari_enable_instancemonitor: "yes"
+masakari_enable_hostmonitor: "yes"
+masakari_enable_processmonitor: "yes"
+
+#######################
+# Watcher Configuration
+#######################
+# Resource optimization service
+watcher_database_name: "watcher"
+watcher_database_user: "watcher"
+
+neutron_ovn_controller_timeout: 300
+iopenvswitch_startup_timeout: 120
+
+enable_skyline: "yes"

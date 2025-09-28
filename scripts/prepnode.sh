@@ -26,4 +26,10 @@ sudo systemctl status chrony
 
 # Commented out 127.0.0.1 and 127.1.1.1 lines to get prechecks to work
 
+# Disable unattended upgrades
+sudo systemctl stop unattended-upgrades
+sudo systemctl disable unattended-upgrades
+sudo systemctl disable --now apt-daily.timer apt-daily-upgrade.timer
+sudo systemctl mask apt-daily.service apt-daily-upgrade.service
+
 sudo reboot now 

@@ -1,0 +1,121 @@
+<svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .node { fill: #e6f3ff; stroke: #0066cc; stroke-width: 2; }
+      .mgr-node { fill: #e6ffe6; stroke: #00cc00; stroke-width: 2; }
+      .osd-node { fill: #fff0e6; stroke: #ff8000; stroke-width: 2; }
+      .gw-node { fill: #ffe6f0; stroke: #cc0066; stroke-width: 2; }
+      .network { fill: none; stroke: #666; stroke-width: 2; stroke-dasharray: 5,5; }
+      .connection { stroke: #999; stroke-width: 1; }
+      .text { font-family: Arial, sans-serif; font-size: 12px; text-anchor: middle; }
+      .title { font-family: Arial, sans-serif; font-size: 16px; font-weight: bold; text-anchor: middle; }
+      .subnet-label { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; }
+    </style>
+  </defs>
+  
+  <!-- Title -->
+  <text x="400" y="30" class="title">Ceph Cluster Network Architecture</text>
+  
+  <!-- Network Subnets -->
+  <rect x="50" y="80" width="700" height="200" class="network" rx="10"/>
+  <text x="100" y="100" class="subnet-label">Public Network: 10.10.28.0/24</text>
+  
+  <rect x="50" y="320" width="700" height="200" class="network" rx="10"/>
+  <text x="100" y="340" class="subnet-label">Cluster Network: 10.10.29.0/24</text>
+  
+  <!-- MGR Nodes -->
+  <rect x="100" y="120" width="80" height="60" class="mgr-node" rx="5"/>
+  <text x="140" y="140" class="text">mgr1</text>
+  <text x="140" y="155" class="text">10.10.28.6</text>
+  <text x="140" y="170" class="text">MON+MGR</text>
+  
+  <rect x="220" y="120" width="80" height="60" class="mgr-node" rx="5"/>
+  <text x="260" y="140" class="text">mgr2</text>
+  <text x="260" y="155" class="text">10.10.28.7</text>
+  <text x="260" y="170" class="text">MON+MGR</text>
+  
+  <rect x="340" y="120" width="80" height="60" class="mgr-node" rx="5"/>
+  <text x="380" y="140" class="text">mgr3</text>
+  <text x="380" y="155" class="text">10.10.28.8</text>
+  <text x="380" y="170" class="text">MON+MGR</text>
+  
+  <!-- Gateway Nodes -->
+  <rect x="460" y="120" width="80" height="60" class="gw-node" rx="5"/>
+  <text x="500" y="140" class="text">gw1</text>
+  <text x="500" y="155" class="text">10.10.28.9</text>
+  <text x="500" y="170" class="text">RGW</text>
+  
+  <rect x="580" y="120" width="80" height="60" class="gw-node" rx="5"/>
+  <text x="620" y="140" class="text">gw2</text>
+  <text x="620" y="155" class="text">10.10.28.10</text>
+  <text x="620" y="170" class="text">RGW+MON</text>
+  
+  <!-- OSD Nodes -->
+  <rect x="200" y="200" width="80" height="60" class="osd-node" rx="5"/>
+  <text x="240" y="220" class="text">osd1</text>
+  <text x="240" y="235" class="text">10.10.28.11</text>
+  <text x="240" y="250" class="text">OSD</text>
+  
+  <rect x="320" y="200" width="80" height="60" class="osd-node" rx="5"/>
+  <text x="360" y="220" class="text">osd2</text>
+  <text x="360" y="235" class="text">10.10.28.12</text>
+  <text x="360" y="250" class="text">OSD</text>
+  
+  <rect x="440" y="200" width="80" height="60" class="osd-node" rx="5"/>
+  <text x="480" y="220" class="text">osd3</text>
+  <text x="480" y="235" class="text">10.10.28.13</text>
+  <text x="480" y="250" class="text">OSD</text>
+  
+  <!-- Cluster Network Representations -->
+  <rect x="100" y="380" width="80" height="40" class="mgr-node" rx="5"/>
+  <text x="140" y="395" class="text">mgr1</text>
+  <text x="140" y="410" class="text">10.10.29.6</text>
+  
+  <rect x="220" y="380" width="80" height="40" class="mgr-node" rx="5"/>
+  <text x="260" y="395" class="text">mgr2</text>
+  <text x="260" y="410" class="text">10.10.29.7</text>
+  
+  <rect x="340" y="380" width="80" height="40" class="mgr-node" rx="5"/>
+  <text x="380" y="395" class="text">mgr3</text>
+  <text x="380" y="410" class="text">10.10.29.8</text>
+  
+  <rect x="460" y="380" width="80" height="40" class="gw-node" rx="5"/>
+  <text x="500" y="395" class="text">gw1</text>
+  <text x="500" y="410" class="text">10.10.29.9</text>
+  
+  <rect x="580" y="380" width="80" height="40" class="gw-node" rx="5"/>
+  <text x="620" y="395" class="text">gw2</text>
+  <text x="620" y="410" class="text">10.10.29.10</text>
+  
+  <rect x="200" y="440" width="80" height="40" class="osd-node" rx="5"/>
+  <text x="240" y="455" class="text">osd1</text>
+  <text x="240" y="470" class="text">10.10.29.11</text>
+  
+  <rect x="320" y="440" width="80" height="40" class="osd-node" rx="5"/>
+  <text x="360" y="455" class="text">osd2</text>
+  <text x="360" y="470" class="text">10.10.29.12</text>
+  
+  <rect x="440" y="440" width="80" height="40" class="osd-node" rx="5"/>
+  <text x="480" y="455" class="text">osd3</text>
+  <text x="480" y="470" class="text">10.10.29.13</text>
+  
+  <!-- Dual-homed connections -->
+  <line x1="140" y1="180" x2="140" y2="380" class="connection"/>
+  <line x1="260" y1="180" x2="260" y2="380" class="connection"/>
+  <line x1="380" y1="180" x2="380" y2="380" class="connection"/>
+  <line x1="500" y1="180" x2="500" y2="380" class="connection"/>
+  <line x1="620" y1="180" x2="620" y2="380" class="connection"/>
+  <line x1="240" y1="260" x2="240" y2="440" class="connection"/>
+  <line x1="360" y1="260" x2="360" y2="440" class="connection"/>
+  <line x1="480" y1="260" x2="480" y2="440" class="connection"/>
+  
+  <!-- Legend -->
+  <rect x="50" y="540" width="20" height="15" class="mgr-node"/>
+  <text x="80" y="552" style="font-size: 12px;">MON/MGR Nodes</text>
+  
+  <rect x="200" y="540" width="20" height="15" class="gw-node"/>
+  <text x="230" y="552" style="font-size: 12px;">Gateway Nodes</text>
+  
+  <rect x="350" y="540" width="20" height="15" class="osd-node"/>
+  <text x="380" y="552" style="font-size: 12px;">OSD Nodes</text>
+</svg>
