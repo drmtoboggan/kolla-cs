@@ -474,28 +474,6 @@ kolla-ansible octavia-certificates -i inventories/development/hosts.yml
 # Fix missing package - do during bootstrap
 sudo apt install git-crypt -y
 
-######### Manual Install of Ironic Bits - ctl2 - make part of bootstrap?
-# Create the directory for Ironic agent files
-sudo mkdir -p /etc/kolla/config/ironic/
-
-# Download the latest IPA files for your OpenStack version (2024.2/Dalmatian)
-# Create the directory
-sudo mkdir -p /etc/kolla/config/ironic/
-
-# Download the kernel file
-sudo wget -O /etc/kolla/config/ironic/ironic-agent.kernel \
-  "https://tarballs.openstack.org/ironic-python-agent/dib/files/ipa-centos9-stable-2024.2.kernel"
-
-# Download the initramfs file
-sudo wget -O /etc/kolla/config/ironic/ironic-agent.initramfs \
-  "https://tarballs.openstack.org/ironic-python-agent/dib/files/ipa-centos9-stable-2024.2.initramfs"
-
-# Verify the files exist and have content
-ls -la /etc/kolla/config/ironic/ironic-agent.*
-file /etc/kolla/config/ironic/ironic-agent.*
-
-######### 
-
 
 # 2. Configuration deployment
 kolla-ansible bootstrap-servers -i inventories/development/hosts.yml
@@ -511,6 +489,49 @@ kolla-ansible deploy -i  inventories/development/hosts.yml --tags octavia,ironic
 kolla-ansible post-deploy -i  inventories/development/hosts.yml
 
 
+# 5. Service validation
+sudo apt  install python3-openstackclient -y
+source /etc/kolla/admin-openrc.sh
+openstack endpoint list
+
+/kolla/share/kolla-ansible/init-runonce  # Create initial networks and flavors
+openstack server create --image cirros --flavor m1.tiny --network demo-net test-vm
+
+
+
+
+# List Service Endpoints
+openstack endpoint list
+
+# Service List
+openstack service list
+
+# Compute Healthcheck
+openstack compute service list
+
+# Network Healthcheck
+openstack network agent list
+
+# Storage Healthcheck
+openstack volume service list
+
+# Image Healthcheck
+openstack image list
+
+# Show back end storage services
+openstack volume service list
+
+## Skyline db connection fix. It doesn’t seem to like the 'pmsql' part of the connection string.
+# Create a custom skyline.yaml with the corrected database URL
+sudo mkdir -p /etc/kolla/config/skyline
+sudo bash -c 'cat > /etc/kolla/config/skyline/skyline.yaml << EOF
+default:
+  database_url: mysql://skyline:ciSKM2hquswyplaukd8IvMqAl2tYs8cyLeACJyxh@10.10.27.250:3306/skyline
+EOF'
+
+kolla-ansible reconfigure -i inventories/development/hosts.yml -t skyline
+## 
+
 
 ########## Once the precheck comes back ok, Snap VMs
 $snapname = 'Try 2 - Installed'
@@ -518,8 +539,4 @@ $description = get-date
 
 Get-vm ctl2,ka-ctl1.region.com,ka-ctl2.region.com,ka-ctl3.region.com,ka-net1.region.com,ka-net2.region.com,ka-str1.region.com,ka-hv1.region.com,ka-hv2.region.com | new-snapshot -Name $snapname -Description $description -Quiesce -Memory
 ########## 
-
-# 5. Service validation
-sudo apt  install python3-openstackclient -y
-source /etc/kolla/admin-openrc.sh
 

@@ -104,7 +104,7 @@ enable_kibana: "yes"
 # Prometheus Configuration
 prometheus_haproxy_user: "admin"
 prometheus_haproxy_password: "{{ keystone_admin_password }}"
-prometheus_alertmanager_user: "admin"
+prometheus_alertmanager_user: "alertmanager"
 prometheus_alertmanager_password: "{{ keystone_admin_password }}"
 
 # Enable Prometheus exporters
