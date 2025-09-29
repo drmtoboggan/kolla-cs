@@ -223,3 +223,7 @@ neutron_ovn_controller_timeout: 300
 iopenvswitch_startup_timeout: 120
 
 enable_skyline: "yes"
+skyline_apiserver_port: "9998"
+skyline_console_port: "9997"
+enable_haproxy: "yes"
+enable_keepalived: "yes"

@@ -1,0 +1,203 @@
+<svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .control-node { fill: #e6f3ff; stroke: #0066cc; stroke-width: 2; }
+      .network-node { fill: #e6ffe6; stroke: #00cc00; stroke-width: 2; }
+      .compute-node { fill: #fff0e6; stroke: #ff8000; stroke-width: 2; }
+      .storage-node { fill: #ffe6f0; stroke: #cc0066; stroke-width: 2; }
+      .deploy-node { fill: #f0e6ff; stroke: #8000ff; stroke-width: 2; }
+      .ceph-mgr { fill: #e6ffe6; stroke: #00cc00; stroke-width: 2; }
+      .ceph-osd { fill: #fff0e6; stroke: #ff8000; stroke-width: 2; }
+      .ceph-gw { fill: #ffe6f0; stroke: #cc0066; stroke-width: 2; }
+      .network { fill: none; stroke: #666; stroke-width: 2; stroke-dasharray: 5,5; }
+      .vip { fill: #ffcccc; stroke: #cc0000; stroke-width: 2; }
+      .connection { stroke: #999; stroke-width: 1; }
+      .ceph-connection { stroke: #0066cc; stroke-width: 2; }
+      .storage-connection { stroke: #cc0066; stroke-width: 3; stroke-dasharray: 3,3; }
+      .text { font-family: Arial, sans-serif; font-size: 10px; text-anchor: middle; }
+      .title { font-family: Arial, sans-serif; font-size: 16px; font-weight: bold; text-anchor: middle; }
+      .subnet-label { font-family: Arial, sans-serif; font-size: 12px; font-weight: bold; }
+      .service-text { font-family: Arial, sans-serif; font-size: 8px; text-anchor: middle; }
+    </style>
+  </defs>
+  
+  <!-- Title -->
+  <text x="600" y="25" class="title">Integrated Ceph + OpenStack Architecture</text>
+  
+  <!-- Network Segments -->
+  <!-- OpenStack Management -->
+  <rect x="50" y="60" width="500" height="200" class="network" rx="10"/>
+  <text x="80" y="80" class="subnet-label">OpenStack Management: 10.10.27.0/24</text>
+  
+  <!-- Ceph Public -->
+  <rect x="600" y="60" width="500" height="200" class="network" rx="10"/>
+  <text x="630" y="80" class="subnet-label">Ceph Public: 10.10.28.0/24</text>
+  
+  <!-- External/Provider -->
+  <rect x="50" y="280" width="500" height="140" class="network" rx="10"/>
+  <text x="80" y="300" class="subnet-label">External/Provider: 10.10.28.0/24</text>
+  
+  <!-- Ceph Cluster -->
+  <rect x="600" y="280" width="500" height="140" class="network" rx="10"/>
+  <text x="630" y="300" class="subnet-label">Ceph Cluster: 10.10.29.0/24</text>
+  
+  <!-- VIPs -->
+  <ellipse cx="200" cy="100" rx="60" ry="20" class="vip"/>
+  <text x="200" y="95" class="text">Internal VIP</text>
+  <text x="200" y="110" class="text">10.10.27.250</text>
+  
+  <ellipse cx="200" cy="320" rx="60" ry="20" class="vip"/>
+  <text x="200" y="315" class="text">External VIP</text>
+  <text x="200" y="330" class="text">10.10.28.250</text>
+  
+  <!-- OpenStack Nodes -->
+  <!-- Control Nodes -->
+  <rect x="80" y="130" width="80" height="60" class="control-node" rx="5"/>
+  <text x="120" y="145" class="text">ka-ctl1</text>
+  <text x="120" y="160" class="text">10.10.27.200</text>
+  <text x="120" y="175" class="service-text">Keystone, Nova</text>
+  
+  <rect x="170" y="130" width="80" height="60" class="control-node" rx="5"/>
+  <text x="210" y="145" class="text">ka-ctl2</text>
+  <text x="210" y="160" class="text">10.10.27.201</text>
+  <text x="210" y="175" class="service-text">MariaDB, RabbitMQ</text>
+  
+  <rect x="260" y="130" width="80" height="60" class="control-node" rx="5"/>
+  <text x="300" y="145" class="text">ka-ctl3</text>
+  <text x="300" y="160" class="text">10.10.27.202</text>
+  <text x="300" y="175" class="service-text">Ironic, Octavia</text>
+  
+  <!-- Network Nodes -->
+  <rect x="350" y="130" width="80" height="60" class="network-node" rx="5"/>
+  <text x="390" y="145" class="text">ka-net1</text>
+  <text x="390" y="160" class="text">10.10.27.203</text>
+  <text x="390" y="175" class="service-text">OVN, HAProxy</text>
+  
+  <rect x="440" y="130" width="80" height="60" class="network-node" rx="5"/>
+  <text x="480" y="145" class="text">ka-net2</text>
+  <text x="480" y="160" class="text">10.10.27.204</text>
+  <text x="480" y="175" class="service-text">OVN, HAProxy</text>
+  
+  <!-- Compute/Storage Nodes -->
+  <rect x="80" y="200" width="80" height="50" class="compute-node" rx="5"/>
+  <text x="120" y="220" class="text">ka-hv1</text>
+  <text x="120" y="235" class="text">10.10.27.212</text>
+  
+  <rect x="170" y="200" width="80" height="50" class="compute-node" rx="5"/>
+  <text x="210" y="220" class="text">ka-hv2</text>
+  <text x="210" y="235" class="text">10.10.27.213</text>
+  
+  <rect x="260" y="200" width="80" height="50" class="storage-node" rx="5"/>
+  <text x="300" y="220" class="text">ka-str1</text>
+  <text x="300" y="235" class="text">10.10.27.206</text>
+  
+  <!-- Ceph Nodes -->
+  <!-- MGR/MON Nodes -->
+  <rect x="630" y="100" width="70" height="50" class="ceph-mgr" rx="5"/>
+  <text x="665" y="120" class="text">mgr1</text>
+  <text x="665" y="135" class="text">10.10.28.6</text>
+  
+  <rect x="710" y="100" width="70" height="50" class="ceph-mgr" rx="5"/>
+  <text x="745" y="120" class="text">mgr2</text>
+  <text x="745" y="135" class="text">10.10.28.7</text>
+  
+  <rect x="790" y="100" width="70" height="50" class="ceph-mgr" rx="5"/>
+  <text x="825" y="120" class="text">mgr3</text>
+  <text x="825" y="135" class="text">10.10.28.8</text>
+  
+  <!-- Gateway Nodes -->
+  <rect x="870" y="100" width="70" height="50" class="ceph-gw" rx="5"/>
+  <text x="905" y="120" class="text">gw1</text>
+  <text x="905" y="135" class="text">10.10.28.9</text>
+  
+  <rect x="950" y="100" width="70" height="50" class="ceph-gw" rx="5"/>
+  <text x="985" y="120" class="text">gw2</text>
+  <text x="985" y="135" class="text">10.10.28.10</text>
+  
+  <!-- OSD Nodes -->
+  <rect x="710" y="160" width="70" height="50" class="ceph-osd" rx="5"/>
+  <text x="745" y="180" class="text">osd1</text>
+  <text x="745" y="195" class="text">10.10.28.11</text>
+  
+  <rect x="790" y="160" width="70" height="50" class="ceph-osd" rx="5"/>
+  <text x="825" y="180" class="text">osd2</text>
+  <text x="825" y="195" class="text">10.10.28.12</text>
+  
+  <rect x="870" y="160" width="70" height="50" class="ceph-osd" rx="5"/>
+  <text x="905" y="180" class="text">osd3</text>
+  <text x="905" y="195" class="text">10.10.28.13</text>
+  
+  <!-- Ceph Cluster Network Representations -->
+  <rect x="650" y="320" width="60" height="30" class="ceph-mgr" rx="3"/>
+  <text x="680" y="340" class="service-text">mgr1-mgr3</text>
+  
+  <rect x="720" y="320" width="60" height="30" class="ceph-gw" rx="3"/>
+  <text x="750" y="340" class="service-text">gw1-gw2</text>
+  
+  <rect x="790" y="320" width="60" height="30" class="ceph-osd" rx="3"/>
+  <text x="820" y="340" class="service-text">osd1-osd3</text>
+  
+  <text x="680" y="370" class="service-text">10.10.29.6-8</text>
+  <text x="750" y="370" class="service-text">10.10.29.9-10</text>
+  <text x="820" y="370" class="service-text">10.10.29.11-13</text>
+  
+  <!-- Storage Connections (Ceph to OpenStack) -->
+  <path d="M 340 160 Q 450 120 630 120" class="storage-connection"/>
+  <text x="485" y="115" class="service-text" style="fill: #cc0066;">Ceph RBD Storage</text>
+  
+  <path d="M 340 180 Q 450 180 630 140" class="storage-connection"/>
+  <text x="485" y="195" class="service-text" style="fill: #cc0066;">Glance Images</text>
+  
+  <path d="M 340 200 Q 450 220 630 160" class="storage-connection"/>
+  <text x="485" y="235" class="service-text" style="fill: #cc0066;">Cinder Volumes</text>
+  
+  <!-- Network Connections -->
+  <line x1="120" y1="130" x2="160" y2="110" class="connection"/>
+  <line x1="210" y1="130" x2="180" y2="110" class="connection"/>
+  <line x1="300" y1="130" x2="220" y2="110" class="connection"/>
+  <line x1="390" y1="130" x2="240" y2="110" class="connection"/>
+  
+  <!-- Service Integration Text -->
+  <text x="50" y="460" style="font-size: 12px; font-weight: bold;">Storage Integration:</text>
+  <text x="50" y="480" style="font-size: 10px;">• Nova instances boot from Ceph RBD (external Ceph cluster)</text>
+  <text x="50" y="500" style="font-size: 10px;">• Glance stores VM images in Ceph pools (images pool)</text>
+  <text x="50" y="520" style="font-size: 10px;">• Cinder provides persistent volumes via Ceph RBD (volumes pool)</text>
+  <text x="50" y="540" style="font-size: 10px;">• Cinder backup service stores backups in Ceph (backups pool)</text>
+  
+  <text x="600" y="460" style="font-size: 12px; font-weight: bold;">Network Integration:</text>
+  <text x="600" y="480" style="font-size: 10px;">• OpenStack management network: 10.10.27.0/24</text>
+  <text x="600" y="500" style="font-size: 10px;">• Ceph public network: 10.10.28.0/24 (dual-homed)</text>
+  <text x="600" y="520" style="font-size: 10px;">• Ceph cluster network: 10.10.29.0/24 (replication)</text>
+  <text x="600" y="540" style="font-size: 10px;">• External provider network: 10.10.28.0/24</text>
+  
+  <text x="50" y="580" style="font-size: 12px; font-weight: bold;">Key Features:</text>
+  <text x="50" y="600" style="font-size: 10px;">• Ironic bare metal provisioning with PXE/DHCP from control nodes</text>
+  <text x="50" y="620" style="font-size: 10px;">• OVN distributed virtual routing and security groups</text>
+  <text x="50" y="640" style="font-size: 10px;">• Octavia load balancing with amphora instances</text>
+  
+  <text x="600" y="580" style="font-size: 12px; font-weight: bold;">HA Configuration:</text>
+  <text x="600" y="600" style="font-size: 10px;">• Ceph: 4 MON daemons across mgr1-3 + gw2</text>
+  <text x="600" y="620" style="font-size: 10px;">• OpenStack: 3-node control plane with VIP failover</text>
+  <text x="600" y="640" style="font-size: 10px;">• Masakari provides compute node evacuation and recovery</text>
+  
+  <!-- Legend -->
+  <rect x="50" y="680" width="15" height="10" class="control-node"/>
+  <text x="75" y="689" style="font-size: 10px;">OpenStack Control</text>
+  
+  <rect x="200" y="680" width="15" height="10" class="network-node"/>
+  <text x="225" y="689" style="font-size: 10px;">OpenStack Network</text>
+  
+  <rect x="350" y="680" width="15" height="10" class="compute-node"/>
+  <text x="375" y="689" style="font-size: 10px;">OpenStack Compute</text>
+  
+  <rect x="500" y="680" width="15" height="10" class="storage-node"/>
+  <text x="525" y="689" style="font-size: 10px;">OpenStack Storage</text>
+  
+  <rect x="650" y="680" width="15" height="10" class="ceph-mgr"/>
+  <text x="675" y="689" style="font-size: 10px;">Ceph MON/MGR</text>
+  
+  <rect x="800" y="680" width="15" height="10" class="ceph-osd"/>
+  <text x="825" y="689" style="font-size: 10px;">Ceph OSD</text>
+  
+  <rect x="950" y="680" width="15" height="10" class="ceph-gw"/>
+  <text x="975" y="689" style="font-size: 10px;">Ceph Gateway</text>

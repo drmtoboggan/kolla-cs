@@ -55,6 +55,28 @@ if [[ -d ".git" && ! -d ".git/git-crypt" ]]; then
     git-crypt init
 fi
 
+######### Manual Install of Ironic Bits - ctl2 - make part of bootstrap?
+# Create the directory for Ironic agent files
+sudo mkdir -p /etc/kolla/config/ironic/
+
+# Download the latest IPA files for your OpenStack version (2024.2/Dalmatian)
+# Create the directory
+sudo mkdir -p /etc/kolla/config/ironic/
+
+# Download the kernel file
+sudo wget -O /etc/kolla/config/ironic/ironic-agent.kernel \
+  "https://tarballs.openstack.org/ironic-python-agent/dib/files/ipa-centos9-stable-2024.2.kernel"
+
+# Download the initramfs file
+sudo wget -O /etc/kolla/config/ironic/ironic-agent.initramfs \
+  "https://tarballs.openstack.org/ironic-python-agent/dib/files/ipa-centos9-stable-2024.2.initramfs"
+
+# Verify the files exist and have content
+ls -la /etc/kolla/config/ironic/ironic-agent.*
+file /etc/kolla/config/ironic/ironic-agent.*
+######### 
+
+
 echo "Bootstrap completed successfully!"
 echo "Next steps:"
 echo "1. Configure inventories/$ENVIRONMENT/hosts.yml"
