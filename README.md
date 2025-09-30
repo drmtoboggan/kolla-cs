@@ -120,6 +120,69 @@ Security Team: security@company.com
 License
 This project is licensed under the Apache License 2.0 - see the LICENSE file for details.
 
+
+### Redundancy Considerations
+Control Plane HA (3 nodes)
+
+ka-ctl1, ka-ctl2, ka-ctl3 run all API services
+HAProxy + Keepalived provide load balancing and VIP failover
+MariaDB cluster with 3-node Galera replication
+RabbitMQ cluster across all 3 control nodes
+Any single control node can fail without service disruption
+
+Network HA (2 nodes)
+
+ka-net1, ka-net2 run neutron agents (DHCP, L3, metadata)
+Distributed routing allows failover between network nodes
+OpenVSwitch agents on both network and compute nodes
+
+Compute HA (2 nodes + Masakari)
+
+ka-hv1, ka-hv2 run nova-compute
+Masakari provides instance-level HA:
+
+Monitors VM health and automatically evacuates failed instances
+Monitors host health and triggers evacuation on node failure
+Monitors OpenStack processes and restarts them
+
+
+
+Storage HA (External Ceph)
+
+External Ceph cluster provides distributed block storage
+Multiple RBD pools for images, volumes, VM disks
+No single point of failure in storage layer
+
+Service-Level HA
+
+Watcher optimizes resource placement and can rebalance workloads
+Multiple API endpoints behind load balancers
+Stateless services can restart on any control node
+
+What's NOT HA:
+
+Single storage node (ka-str1) - this runs Cinder services but actual storage is on external Ceph
+Single-instance services like Watcher engine (but these are non-critical)
+
+This is a production-grade HA setup. You can lose any single node (except storage, but that's just the Cinder service endpoint) and maintain full OpenStack functionality. The Masakari integration adds instance-level HA that most OpenStack deployments don't have.
+### End Redundancy 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ### Procedure 
 
 

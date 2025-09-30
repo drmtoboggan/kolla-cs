@@ -1,4 +1,4 @@
-# inventories/development/hosts.yml - Focused Traditional Compute
+# inventories/development/hosts.yml
 ---
 all:
   children:
@@ -50,7 +50,7 @@ all:
           ansible_user: user
           ansible_ssh_private_key_file: ~/.ssh/id_ed25519
 
-    # Required empty group
+    # Bifrost (required by Kolla-Ansible conditionals)
     bifrost:
       hosts: {}
 
@@ -61,8 +61,21 @@ all:
         ka-ctl2: *ctl2
         ka-ctl3: *ctl3
 
+    monitoring:
+      hosts:
+        ka-ctl1: *ctl1
+        ka-ctl2: *ctl2
+        ka-ctl3: *ctl3
+
+    # Database groups
     # Database and Messaging
     mariadb:
+      hosts:
+        ka-ctl1: *ctl1
+        ka-ctl2: *ctl2
+        ka-ctl3: *ctl3
+
+    proxysql:
       hosts:
         ka-ctl1: *ctl1
         ka-ctl2: *ctl2
@@ -76,12 +89,6 @@ all:
 
     # Cache/session storage
     redis:
-      hosts:
-        ka-ctl1: *ctl1
-        ka-ctl2: *ctl2
-        ka-ctl3: *ctl3
-
-    memcached:
       hosts:
         ka-ctl1: *ctl1
         ka-ctl2: *ctl2
@@ -107,7 +114,7 @@ all:
         ka-ctl2: *ctl2
         ka-ctl3: *ctl3
 
-    # Nova (Compute service) - Complete groups
+    # Nova (Compute service)
     nova-api:
       hosts:
         ka-ctl1: *ctl1
@@ -147,25 +154,12 @@ all:
     nova-super-conductor:
       hosts: {}
 
-    nova-compute:
-      hosts:
-        ka-hv1: *hv1
-        ka-hv2: *hv2
-
+    # For Ironic integration
     nova-compute-ironic:
-      hosts: {}
-
-    nova-libvirt:
       hosts:
-        ka-hv1: *hv1
-        ka-hv2: *hv2
+        ka-ctl1: *ctl1
 
-    nova-ssh:
-      hosts:
-        ka-hv1: *hv1
-        ka-hv2: *hv2
-
-    # Neutron (Networking service) - Traditional OpenVSwitch
+    # Neutron (Networking service) - OVN configuration
     neutron-server:
       hosts:
         ka-ctl1: *ctl1
@@ -185,10 +179,17 @@ all:
         ka-ctl3: *ctl3
 
     neutron-ovn-maintenance-worker:
-      hosts: {}
+      hosts:
+        ka-ctl1: *ctl1
+        ka-ctl2: *ctl2
+        ka-ctl3: *ctl3
 
     neutron-ovn-metadata-agent:
-      hosts: {}
+      hosts:
+        ka-net1: *net1
+        ka-net2: *net2
+        ka-hv1: *hv1
+        ka-hv2: *hv2
 
     neutron-dhcp-agent:
       hosts:
@@ -215,7 +216,7 @@ all:
     neutron-linuxbridge-agent:
       hosts: {}
 
-    # Placeholder groups for disabled services
+    # Optional Neutron services
     neutron-bgp-dragent:
       hosts: {}
 
@@ -228,16 +229,57 @@ all:
     neutron-ovn-agent:
       hosts: {}
 
-    neutron-sriov-agent:
-      hosts: {}
-
-    neutron-mlnx-agent:
-      hosts: {}
-
-    neutron-eswitchd:
-      hosts: {}
-
+    # Ironic-Neutron integration
     ironic-neutron-agent:
+      hosts:
+        ka-ctl1: *ctl1
+        ka-ctl2: *ctl2
+        ka-ctl3: *ctl3
+
+    # Ironic (Bare Metal service)
+    ironic-api:
+      hosts:
+        ka-ctl1: *ctl1
+        ka-ctl2: *ctl2
+        ka-ctl3: *ctl3
+
+    ironic-conductor:
+      hosts:
+        ka-ctl1: *ctl1
+        ka-ctl2: *ctl2
+        ka-ctl3: *ctl3
+
+    ironic-inspector:
+      hosts:
+        ka-ctl1: *ctl1
+        ka-ctl2: *ctl2
+        ka-ctl3: *ctl3
+
+    ironic-pxe:
+      hosts:
+        ka-ctl1: *ctl1
+        ka-ctl2: *ctl2
+        ka-ctl3: *ctl3
+
+    ironic-tftp:
+      hosts:
+        ka-ctl1: *ctl1
+        ka-ctl2: *ctl2
+        ka-ctl3: *ctl3
+
+    ironic-http:
+      hosts:
+        ka-ctl1: *ctl1
+        ka-ctl2: *ctl2
+        ka-ctl3: *ctl3
+
+    ironic-dnsmasq:
+      hosts:
+        ka-ctl1: *ctl1
+        ka-ctl2: *ctl2
+        ka-ctl3: *ctl3
+
+    ironic-prometheus-exporter:
       hosts: {}
 
     # Placement service
@@ -247,11 +289,14 @@ all:
         ka-ctl2: *ctl2
         ka-ctl3: *ctl3
 
-    # Horizon disabled, but group needed
+    # Horizon (Dashboard)
     horizon:
-      hosts: {}
+      hosts:
+        ka-ctl1: *ctl1
+        ka-ctl2: *ctl2
+        ka-ctl3: *ctl3
 
-    # Heat disabled, but groups needed
+    # Heat (Orchestration service) - optional
     heat-api:
       hosts: {}
 
@@ -261,7 +306,7 @@ all:
     heat-engine:
       hosts: {}
 
-    # Cinder (Block Storage service)
+    # Cinder (Block Storage service) - using your storage node
     cinder-api:
       hosts:
         ka-ctl1: *ctl1
@@ -281,86 +326,6 @@ all:
     cinder-volume:
       hosts:
         ka-str1: *str1
-
-    # Masakari (Instance High Availability) - Your Request
-    masakari-api:
-      hosts:
-        ka-ctl1: *ctl1
-        ka-ctl2: *ctl2
-        ka-ctl3: *ctl3
-
-    masakari-engine:
-      hosts:
-        ka-ctl1: *ctl1
-        ka-ctl2: *ctl2
-        ka-ctl3: *ctl3
-
-    masakari-instancemonitor:
-      hosts:
-        ka-hv1: *hv1
-        ka-hv2: *hv2
-
-    masakari-hostmonitor:
-      hosts:
-        ka-ctl1: *ctl1
-        ka-ctl2: *ctl2
-        ka-ctl3: *ctl3
-
-    # Watcher (Resource Optimization) - Your Request
-    watcher-api:
-      hosts:
-        ka-ctl1: *ctl1
-        ka-ctl2: *ctl2
-        ka-ctl3: *ctl3
-
-    watcher-engine:
-      hosts:
-        ka-ctl1: *ctl1
-
-    watcher-applier:
-      hosts:
-        ka-ctl1: *ctl1
-
-    # Skyline (Modern Web UI) - Your Request
-    skyline:
-      hosts:
-        ka-ctl1: *ctl1
-        ka-ctl2: *ctl2
-        ka-ctl3: *ctl3
-
-    skyline-apiserver:
-      hosts:
-        ka-ctl1: *ctl1
-        ka-ctl2: *ctl2
-        ka-ctl3: *ctl3
-
-    skyline-console:
-      hosts:
-        ka-ctl1: *ctl1
-        ka-ctl2: *ctl2
-        ka-ctl3: *ctl3
-
-    # OpenVSwitch services (for traditional networking)
-    openvswitch:
-      hosts:
-        ka-net1: *net1
-        ka-net2: *net2
-        ka-hv1: *hv1
-        ka-hv2: *hv2
-
-    openvswitch-db-server:
-      hosts:
-        ka-net1: *net1
-        ka-net2: *net2
-        ka-hv1: *hv1
-        ka-hv2: *hv2
-
-    openvswitch-vswitchd:
-      hosts:
-        ka-net1: *net1
-        ka-net2: *net2
-        ka-hv1: *hv1
-        ka-hv2: *hv2
 
     # Additional infrastructure
     chrony:
@@ -406,6 +371,216 @@ all:
         ka-hv2: *hv2
         ka-str1: *str1
 
+    # Masakari (Instance High Availability)
+    masakari-api:
+      hosts:
+        ka-ctl1: *ctl1
+        ka-ctl2: *ctl2
+        ka-ctl3: *ctl3
+
+    masakari-engine:
+      hosts:
+        ka-ctl1: *ctl1
+        ka-ctl2: *ctl2
+        ka-ctl3: *ctl3
+
+    masakari-instancemonitor:
+      hosts:
+        ka-hv1: *hv1
+        ka-hv2: *hv2
+
+    masakari-hostmonitor:
+      hosts:
+        ka-ctl1: *ctl1
+        ka-ctl2: *ctl2
+        ka-ctl3: *ctl3
+
+    hacluster:
+      hosts: {}
+
+    hacluster-remote:
+      hosts: {}
+
+    # Watcher (Resource Optimization)
+    watcher-api:
+      hosts:
+        ka-ctl1: *ctl1
+        ka-ctl2: *ctl2
+        ka-ctl3: *ctl3
+
+    watcher-engine:
+      hosts:
+        ka-ctl1: *ctl1
+
+    watcher-applier:
+      hosts:
+        ka-ctl1: *ctl1
+
+    # Octavia (Load Balancer as a Service)
+    octavia-api:
+      hosts:
+        ka-ctl1: *ctl1
+        ka-ctl2: *ctl2
+        ka-ctl3: *ctl3
+
+    octavia-health-manager:
+      hosts:
+        ka-net1: *net1
+        ka-net2: *net2
+
+    octavia-housekeeping:
+      hosts:
+        ka-ctl1: *ctl1
+
+    octavia-worker:
+      hosts:
+        ka-ctl1: *ctl1
+        ka-ctl2: *ctl2
+        ka-ctl3: *ctl3
+
+    octavia-driver-agent:
+      hosts:
+        ka-ctl1: *ctl1
+        ka-ctl2: *ctl2
+        ka-ctl3: *ctl3
+
+    # Monitoring and Logging services
+    prometheus:
+      hosts:
+        ka-ctl1: *ctl1
+        ka-ctl2: *ctl2
+        ka-ctl3: *ctl3
+
+    prometheus-mysqld-exporter:
+      hosts:
+        ka-ctl1: *ctl1
+        ka-ctl2: *ctl2
+        ka-ctl3: *ctl3
+
+    prometheus-memcached-exporter:
+      hosts:
+        ka-ctl1: *ctl1
+        ka-ctl2: *ctl2
+        ka-ctl3: *ctl3
+
+    prometheus-alertmanager:
+      hosts:
+        ka-ctl1: *ctl1
+        ka-ctl2: *ctl2
+        ka-ctl3: *ctl3
+
+    prometheus-openstack-exporter:
+      hosts:
+        ka-ctl1: *ctl1
+        ka-ctl2: *ctl2
+        ka-ctl3: *ctl3
+
+    prometheus-elasticsearch-exporter:
+      hosts:
+        ka-ctl1: *ctl1
+        ka-ctl2: *ctl2
+        ka-ctl3: *ctl3
+
+    prometheus-blackbox-exporter:
+      hosts:
+        ka-ctl1: *ctl1
+        ka-ctl2: *ctl2
+        ka-ctl3: *ctl3
+
+    prometheus-libvirt-exporter:
+      hosts:
+        ka-hv1: *hv1
+        ka-hv2: *hv2
+
+    grafana:
+      hosts:
+        ka-ctl1: *ctl1
+        ka-ctl2: *ctl2
+        ka-ctl3: *ctl3
+
+    elasticsearch:
+      hosts:
+        ka-ctl1: *ctl1
+        ka-ctl2: *ctl2
+        ka-ctl3: *ctl3
+
+    kibana:
+      hosts:
+        ka-ctl1: *ctl1
+
+    # Add this group to your inventory
+    openvswitch:
+      hosts:
+        ka-net1: *net1
+        ka-net2: *net2
+        ka-hv1: *hv1
+        ka-hv2: *hv2
+
+    # OpenVSwitch services
+    openvswitch-db-server:
+      hosts:
+        ka-net1: *net1
+        ka-net2: *net2
+        ka-hv1: *hv1
+        ka-hv2: *hv2
+
+    openvswitch-vswitchd:
+      hosts:
+        ka-net1: *net1
+        ka-net2: *net2
+        ka-hv1: *hv1
+        ka-hv2: *hv2
+
+    # OVN (Open Virtual Network) groups
+    ovn-northd:
+      hosts:
+        ka-ctl1: *ctl1
+        ka-ctl2: *ctl2
+        ka-ctl3: *ctl3
+
+    ovn-nb-db:
+      hosts:
+        ka-ctl1: *ctl1
+        ka-ctl2: *ctl2
+        ka-ctl3: *ctl3
+
+    ovn-sb-db:
+      hosts:
+        ka-ctl1: *ctl1
+        ka-ctl2: *ctl2
+        ka-ctl3: *ctl3
+
+    ovn-controller:
+      children:
+        ovn-controller-compute: {}
+        ovn-controller-network: {}
+
+    ovn-controller-compute:
+      hosts:
+        ka-hv1: *hv1
+        ka-hv2: *hv2
+
+    ovn-controller-network:
+      hosts:
+        ka-net1: *net1
+        ka-net2: *net2
+
+    ovn-controller-vtep:
+      hosts: {}
+
+    # Additional common services that might be needed
+    memcached:
+      hosts:
+        ka-ctl1: *ctl1
+        ka-ctl2: *ctl2
+        ka-ctl3: *ctl3
+
+    etcd:
+      hosts:
+        ka-ctl1: *ctl1
+        ka-ctl2: *ctl2
+        ka-ctl3: *ctl3
+
     # Deployment host
     deployment:
       hosts:
@@ -424,3 +599,51 @@ all:
         ka-hv1: *hv1
         ka-hv2: *hv2
         ka-str1: *str1
+
+    prometheus-node-exporter:
+      hosts:
+        ka-ctl1: *ctl1
+        ka-ctl2: *ctl2
+        ka-ctl3: *ctl3
+        ka-net1: *net1
+        ka-net2: *net2
+        ka-hv1: *hv1
+        ka-hv2: *hv2
+        ka-str1: *str1
+
+    # Add to your hosts.yml monitoring section
+    prometheus-cadvisor:
+      hosts:
+        ka-net1: *net1
+        ka-net2: *net2
+        ka-hv1: *hv1
+        ka-hv2: *hv2
+        ka-str1: *str1
+
+    opensearch:
+      hosts:
+        ka-ctl1: *ctl1
+        ka-ctl2: *ctl2
+        ka-ctl3: *ctl3
+
+    opensearch-dashboards:
+      hosts:
+        ka-ctl1: *ctl1
+
+    skyline:
+      hosts:
+        ka-ctl1: *ctl1
+        ka-ctl2: *ctl2
+        ka-ctl3: *ctl3
+
+    skyline-apiserver:
+      hosts:
+        ka-ctl1: *ctl1
+        ka-ctl2: *ctl2
+        ka-ctl3: *ctl3
+
+    skyline-console:
+      hosts:
+        ka-ctl1: *ctl1
+        ka-ctl2: *ctl2
+        ka-ctl3: *ctl3
