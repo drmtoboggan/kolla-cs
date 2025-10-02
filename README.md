@@ -287,7 +287,7 @@ sudo vi /etc/hosts
 sudo apt update  -y && sudo apt upgrade -y && sudo apt install open-vm-tools -y
 
 ### 
-echo "https://drmtoboggan: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@github.com" > ~/.git-credentials
+echo "https://drmtoboggan:TOKEN@github.com" > ~/.git-credentials
 git config --global credential.helper store
 git clone https://github.com/drmtoboggan/kolla-cs.git
 cd kolla-cs
